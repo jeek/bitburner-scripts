@@ -1,5 +1,11 @@
 /** @param {NS} ns **/
 export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/gitpull.js', '/jeek/gitpull.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/hackit.js', '/jeek/hackit.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/start.js', '/jeek/start.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/purchasetor.js', '/jeek/purchasetor.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/simplehack.js', '/jeek/simplehack.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/upgradehomeram.js', '/jeek/upgradehomeram.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checkprogs.js', '/jeek/checkprogs.js');
 	ns.toast('Scripts updated.');
 }
