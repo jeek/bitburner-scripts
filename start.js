@@ -9,11 +9,6 @@ async function bestserver(ns) {
 	var bestmoney = 0;
 	for (var i = 0; i < serverlist.length; i++) {
 		if (serverlist[i] != "home") {
-			var threads = Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js'));
-			while (threads == 0) {
-				await ns.sleep(1);
-				threads = Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js'));
-			}
 			var pid = ns.run('/jeek/hackit.js', threads, serverlist[i]);
 			while (ns.isRunning(pid)) {
 				await ns.sleep(1);
