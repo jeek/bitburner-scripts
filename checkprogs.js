@@ -17,8 +17,9 @@ export async function main(ns) {
 		}
 		if (self['hacking'] >= cost[i] & !ns.fileExists(i)) {
 			if (!ns.isBusy()) {
-				ns.toast("Writing " + i);
-				ns.createProgram(i, false);
+				if (ns.createProgram(i, false)) {
+					ns.toast("Writing " + i);
+				}
 			}
 		}
 	}
