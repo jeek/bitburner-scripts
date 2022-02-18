@@ -9,7 +9,12 @@ async function bestserver(ns) {
 	var bestmoney = 0;
 	for (var i = 0; i < serverlist.length; i++) {
 		if (serverlist[i] != "home") {
-			var pid = ns.run('/jeek/hackit.js', Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js')), serverlist[i]);
+			var threads = Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js'));
+			while (threads == 0) {
+				await ns.sleep(1);
+				threads = Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js'));
+			}
+			var pid = ns.run('/jeek/hackit.js', threads, serverlist[i]);
 			while (ns.isRunning(pid)) {
 				await ns.sleep(1);
 			}
@@ -125,10 +130,11 @@ export async function main(ns) {
 				}
 			}
 		}
+		while (ns.isRunning('/jeek/hack.js', 'home', target)) {
+			await ns.sleep(100);
+		}
 		n00dles = ns.getServer(target);
-	}
-	while (ns.isRunning('/jeek/hack.js', 'home', target)) {
-		await ns.sleep(100);
+		await ns.sleep(10);
 	}
 	await ns.run('start.js', 1)
 }
