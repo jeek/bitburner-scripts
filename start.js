@@ -62,7 +62,7 @@ export async function main(ns) {
 	var target = await bestserver(ns);
 	ns.toast('Best Server: ' + target);
 	var n00dles = ns.getServer(target);
-	while ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax)) {
+	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax)) {
 		if (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
@@ -110,31 +110,32 @@ export async function main(ns) {
 			}
 		}
 		n00dles = ns.getServer(target);
-	}
-	while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
-		ns.toast("Hacking " + target);
-		for (var i = 0; i < serverlist.length; i++) {
-			if (ns.hasRootAccess(serverlist[i])) {
-				if (serverlist[i] != 'home') {
-					await ns.scp('/jeek/hack.js', serverlist[i]);
+	} else {
+		while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
+			ns.toast("Hacking " + target);
+			for (var i = 0; i < serverlist.length; i++) {
+				if (ns.hasRootAccess(serverlist[i])) {
+					if (serverlist[i] != 'home') {
+						await ns.scp('/jeek/hack.js', serverlist[i]);
+					}
+					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')) >= 1) {
+						ns.exec('/jeek/hack.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')), target);
+					}
 				}
-				if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')) >= 1) {
-					ns.exec('/jeek/hack.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')), target);
-				}
-			}
 
-			var current = ns.scan(serverlist[i]);
-			for (var j = 0; j < current.length; j++) {
-				if (!serverlist.includes(current[j])) {
-					serverlist.push(current[j]);
+				var current = ns.scan(serverlist[i]);
+				for (var j = 0; j < current.length; j++) {
+					if (!serverlist.includes(current[j])) {
+						serverlist.push(current[j]);
+					}
 				}
 			}
+			while (ns.isRunning('/jeek/hack.js', 'home', target)) {
+				await ns.sleep(100);
+			}
+			n00dles = ns.getServer(target);
+			await ns.sleep(10);
 		}
-		while (ns.isRunning('/jeek/hack.js', 'home', target)) {
-			await ns.sleep(100);
-		}
-		n00dles = ns.getServer(target);
-		await ns.sleep(10);
 	}
 	await ns.run('start.js', 1)
 }
