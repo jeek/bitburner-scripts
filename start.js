@@ -71,7 +71,7 @@ export async function main(ns) {
 						await ns.scp('/jeek/weaken.js', serverlist[i]);
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')) >= 1) {
-						ns.exec('/jeek/simplehack.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')), target);
+						ns.exec('/jeek/weaken.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')), target);
 					}
 				}
 
