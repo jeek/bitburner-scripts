@@ -135,7 +135,7 @@ export async function main(ns) {
 			await ns.sleep(10);
 		}
 	}
-	while (!ns.isRunning('/jeek/start2.js', 'home', target)) {
+	while (!ns.isRunning('/jeek/start2.js', 'home')) {
 		await ns.sleep(100);
 		ns.run('/jeek/start2.js', 1)
 	}
