@@ -3,21 +3,17 @@
 async function bestserver(ns) {
 	var self = ns.getPlayer();
 	var targetLevel = self['hacking'] / 2;
+	if (targetLevel < 1) {
+		targetLevel = 1;
+	}
 	var serverlist = ['home'];
 	var i = 0;
 	var targetserver = "";
 	var bestmoney = 0;
 	for (var i = 0; i < serverlist.length; i++) {
 		if (serverlist[i] != "home") {
-			var pid = ns.run('/jeek/hackit.js', threads, serverlist[i]);
-			while (ns.isRunning(pid)) {
-				await ns.sleep(1);
-			}
+			ns.run('/jeek/hackit.js', 1, serverlist[i]);
 		}
-		if (ns.hasRootAccess(serverlist[i]) & (ns.getServerRequiredHackingLevel(serverlist[i]) <= targetLevel) & (ns.getServerMaxMoney(serverlist[i]) > bestmoney)) {
-			targetserver = serverlist[i];
-			bestmoney = ns.getServerMaxMoney(targetserver);
-		};
 		var current = ns.scan(serverlist[i]);
 		for (var j = 0; j < current.length; j++) {
 			if (!serverlist.includes(current[j])) {
@@ -25,7 +21,18 @@ async function bestserver(ns) {
 			}
 		}
 	}
-	ns.toast("Best Server: " + targetserver)
+	serverlist = serverlist.filter(x => ns.hasRootAccess(x));
+	serverlist = serverlist.filter(y => ns.getServerRequiredHackingLevel(y) <= targetLevel);
+	serverlist = serverlist.sort(function (a, b) {
+		ns.hackAnalyzeChance(a) * (100 - ns.getServer(a).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(a) - 1)) * ns.getServerMaxMoney(a) / (ns.getHackTime(a) * ns.hackAnalyzeThreads(a, 1)) -
+			ns.hackAnalyzeChance(b) * (100 - ns.getServer(b).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(b) - 1)) * ns.getServerMaxMoney(b) / (ns.getHackTime(b) * ns.hackAnalyzeThreads(b, 1))
+	});
+	if (serverlist.length > 0) {
+		targetserver = serverlist[serverlist.length - 1];
+	} else {
+		targetserver = n00dles;
+	}
+	ns.toast("Best Server: " + targetserver);
 	return targetserver;
 }
 
@@ -35,16 +42,7 @@ export async function main(ns) {
 	ns.disableLog("scan");
 
 	var self = ns.getPlayer();
-	while (self['hacking'] < 10) {
-		var bootstrapMem = ns.getScriptRam('/jeek/simplehack.js');
-		var pid = ns.run('/jeek/simplehack.js', Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js')), 'n00dles');
-		while (ns.isRunning('/jeek/simplehack.js', 'home', 'n00dles')) {
-			await ns.sleep(100);
-		}
-		var self = ns.getPlayer();
-		await ns.sleep(100);
-	}
-	var bootstrap = ['/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js'];
+	var bootstrap = ['/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js'];
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
 		var pid = ns.run(prog, 1);
@@ -55,9 +53,17 @@ export async function main(ns) {
 		}
 	}
 	var serverlist = ['home'];
+	for (var i = 0; i < serverlist.length; i++) {
+		var current = ns.scan(serverlist[i]);
+		for (var j = 0; j < current.length; j++) {
+			if (!serverlist.includes(current[j])) {
+				serverlist.push(current[j]);
+			}
+		}
+	}
 	var target = await bestserver(ns);
 	var n00dles = ns.getServer(target);
-	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax)) {
+	while ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
 		if (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
@@ -66,14 +72,9 @@ export async function main(ns) {
 						await ns.scp('/jeek/weaken.js', serverlist[i]);
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')) >= 1) {
-						ns.exec('/jeek/weaken.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')), target);
-					}
-				}
-
-				var current = ns.scan(serverlist[i]);
-				for (var j = 0; j < current.length; j++) {
-					if (!serverlist.includes(current[j])) {
-						serverlist.push(current[j]);
+						while (0 == ns.exec('/jeek/weaken.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/weaken.js')), target)) {
+							await ns.sleep(15);
+						}
 					}
 				}
 			}
@@ -81,7 +82,7 @@ export async function main(ns) {
 				await ns.sleep(100);
 			}
 		}
-		if (n00dles.moneyAvailable < n00dles.moneyMax) {
+		if (n00dles.moneyAvailable < n00dles.moneyMax * .95) {
 			ns.toast("Grow on " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -89,7 +90,9 @@ export async function main(ns) {
 						await ns.scp('/jeek/grow.js', serverlist[i]);
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/grow.js')) >= 1) {
-						ns.exec('/jeek/grow.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/grow.js')), target);
+						while (0 == ns.exec('/jeek/grow.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/grow.js')), target)) {
+							await ns.sleep(15);
+						}
 					}
 				}
 
@@ -105,7 +108,9 @@ export async function main(ns) {
 			}
 		}
 		n00dles = ns.getServer(target);
-	} else {
+		await ns.sleep(16 * serverlist.length);
+	}
+	while ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax)) {
 		while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
 			ns.toast("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
@@ -115,13 +120,6 @@ export async function main(ns) {
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')) >= 1) {
 						ns.exec('/jeek/hack.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')), target);
-					}
-				}
-
-				var current = ns.scan(serverlist[i]);
-				for (var j = 0; j < current.length; j++) {
-					if (!serverlist.includes(current[j])) {
-						serverlist.push(current[j]);
 					}
 				}
 			}
