@@ -137,5 +137,5 @@ export async function main(ns) {
 			await ns.sleep(10);
 		}
 	}
-	await ns.run('start.js', 1)
+	await ns.run('/jeek/start.js', 1)
 }
