@@ -7,5 +7,8 @@ export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/simplehack.js', '/jeek/simplehack.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/upgradehomeram.js', '/jeek/upgradehomeram.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checkprogs.js', '/jeek/checkprogs.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/grow.js', '/jeek/grow.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/hack.js', '/jeek/hack.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/weaken.js', '/jeek/weaken.js');
 	ns.toast('Scripts updated.');
 }
