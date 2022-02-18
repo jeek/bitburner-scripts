@@ -60,7 +60,6 @@ export async function main(ns) {
 	}
 	var serverlist = ['home'];
 	var target = await bestserver(ns);
-	ns.toast('Best Server: ' + target);
 	var n00dles = ns.getServer(target);
 	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax)) {
 		if (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
