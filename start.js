@@ -53,8 +53,10 @@ export async function main(ns) {
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
 		var pid = ns.run(prog, 1);
-		while (ns.isRunning(pid, 'home')) {
-			await ns.sleep(100);
+		if (pid > 0) {
+			while (ns.isRunning(pid)) {
+				await ns.sleep(100);
+			}
 		}
 	}
 	var serverlist = ['home'];
