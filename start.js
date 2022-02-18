@@ -40,7 +40,6 @@ export async function main(ns) {
 	ns.disableLog("scan");
 
 	var self = ns.getPlayer();
-	ns.tprint(self['hacking']);
 	while (self['hacking'] < 10) {
 		var bootstrapMem = ns.getScriptRam('/jeek/simplehack.js');
 		var pid = ns.run('/jeek/simplehack.js', Math.floor((ns.getServerMaxRam('home') - ns.getServerUsedRam('home')) / ns.getScriptRam('/jeek/simplehack.js')), 'n00dles');
@@ -136,5 +135,6 @@ export async function main(ns) {
 			await ns.sleep(10);
 		}
 	}
+	await ns.sleep(100);
 	ns.spawn('/jeek/start.js', 1)
 }
