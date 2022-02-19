@@ -10,10 +10,6 @@ async function bestserver(ns) {
 	var i = 0;
 	var targetserver = "";
 	var bestmoney = 0;
-	var pid = ns.run("/home/pop_all.js");
-	while (ns.isRunning(pid)) {
-		await ns.sleep(15);
-	}
 	for (var i = 0; i < serverlist.length; i++) {
 		var current = ns.scan(serverlist[i]);
 		for (var j = 0; j < current.length; j++) {
@@ -45,7 +41,7 @@ export async function main(ns) {
 
 	var self = ns.getPlayer();
 	var startlevel = self['hacking'];
-	var bootstrap = ['/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js'];
+	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js'];
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
 		var pid = ns.run(prog, 1);
@@ -71,8 +67,8 @@ export async function main(ns) {
 		ns.nuke('n00dles');
 	}
 	var n00dles = ns.getServer(target);
-	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
-		while (ns.getPlayer()['hacking'] == startlevel & n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
+	while ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
+		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -104,12 +100,6 @@ export async function main(ns) {
 					}
 				}
 
-				var current = ns.scan(serverlist[i]);
-				for (var j = 0; j < current.length; j++) {
-					if (!serverlist.includes(current[j])) {
-						serverlist.push(current[j]);
-					}
-				}
 			}
 			while (ns.isRunning('/jeek/grow.js', 'home', target)) {
 				await ns.sleep(100);
@@ -119,7 +109,7 @@ export async function main(ns) {
 		await ns.sleep(16 * serverlist.length);
 	}
 	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
-		while (ns.getPlayer()['hacking'] == startlevel & n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
+		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.moneyAvailable * 2 > n00dles.moneyMax)) {
 			ns.toast("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
