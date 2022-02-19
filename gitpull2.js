@@ -12,5 +12,6 @@ export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/weaken.js', '/jeek/weaken.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/start2.js', '/jeek/start2.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/purchaseservers.js', '/jeek/purchaseservers.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/pop_all.js', '/jeek/pop_all.js');
 	ns.toast('Scripts updated.');
 }

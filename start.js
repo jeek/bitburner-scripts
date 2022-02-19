@@ -10,10 +10,11 @@ async function bestserver(ns) {
 	var i = 0;
 	var targetserver = "";
 	var bestmoney = 0;
+//	var pid = ns.run("/home/pop_all.js");
+//	while (ns.isRunning(pid)) {
+//		await ns.sleep(15);
+//	}
 	for (var i = 0; i < serverlist.length; i++) {
-		if (serverlist[i] != "home") {
-			ns.run('/jeek/hackit.js', 1, serverlist[i]);
-		}
 		var current = ns.scan(serverlist[i]);
 		for (var j = 0; j < current.length; j++) {
 			if (!serverlist.includes(current[j])) {
@@ -44,6 +45,7 @@ export async function main(ns) {
 	ns.disableLog("scan");
 
 	var self = ns.getPlayer();
+	var startlevel = self['hacking'];
 	var bootstrap = ['/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js'];
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
@@ -117,7 +119,7 @@ export async function main(ns) {
 		n00dles = ns.getServer(target);
 		await ns.sleep(16 * serverlist.length);
 	}
-	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax)) {
+	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
 		while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
 			ns.toast("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
