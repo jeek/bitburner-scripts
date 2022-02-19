@@ -10,10 +10,10 @@ async function bestserver(ns) {
 	var i = 0;
 	var targetserver = "";
 	var bestmoney = 0;
-//	var pid = ns.run("/home/pop_all.js");
-//	while (ns.isRunning(pid)) {
-//		await ns.sleep(15);
-//	}
+	var pid = ns.run("/home/pop_all.js");
+	while (ns.isRunning(pid)) {
+		await ns.sleep(15);
+	}
 	for (var i = 0; i < serverlist.length; i++) {
 		var current = ns.scan(serverlist[i]);
 		for (var j = 0; j < current.length; j++) {
