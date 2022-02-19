@@ -3,8 +3,8 @@
 async function bestserver(ns) {
 	var self = ns.getPlayer();
 	var targetLevel = self['hacking'] / 2;
-	if (targetLevel < 1) {
-		targetLevel = 1;
+	if (targetLevel < 5) {
+		targetLevel = 5;
 	}
 	var serverlist = ['home'];
 	var i = 0;
@@ -20,6 +20,7 @@ async function bestserver(ns) {
 				serverlist.push(current[j]);
 			}
 		}
+		await ns.sleep(1);
 	}
 	serverlist = serverlist.filter(x => ns.hasRootAccess(x));
 	serverlist = serverlist.filter(y => ns.getServerRequiredHackingLevel(y) <= targetLevel);
@@ -27,6 +28,7 @@ async function bestserver(ns) {
 		ns.hackAnalyzeChance(a) * (100 - ns.getServer(a).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(a) - 1)) * ns.getServerMaxMoney(a) / (ns.getHackTime(a) * ns.hackAnalyzeThreads(a, 1)) -
 			ns.hackAnalyzeChance(b) * (100 - ns.getServer(b).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(b) - 1)) * ns.getServerMaxMoney(b) / (ns.getHackTime(b) * ns.hackAnalyzeThreads(b, 1))
 	});
+	ns.tprint(serverlist);
 	if (serverlist.length > 0) {
 		targetserver = serverlist[serverlist.length - 1];
 	} else {
@@ -61,10 +63,15 @@ export async function main(ns) {
 			}
 		}
 	}
-	var target = await bestserver(ns);
+	var target = "n00dles";
+	if (ns.getPlayer()['hacking'] > 5) {
+		target = await bestserver(ns);
+	} else {
+		ns.nuke('n00dles');
+	}
 	var n00dles = ns.getServer(target);
-	while ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
-		if (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
+	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
+		while (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -110,7 +117,7 @@ export async function main(ns) {
 		n00dles = ns.getServer(target);
 		await ns.sleep(16 * serverlist.length);
 	}
-	while ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax)) {
+	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax)) {
 		while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
 			ns.toast("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
