@@ -73,7 +73,7 @@ export async function main(ns) {
 	}
 	var n00dles = ns.getServer(target);
 	if ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
-		while (n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
+		while (ns.getPlayer()['hacking'] == startlevel & n00dles.minDifficulty + 5 < n00dles.hackDifficulty) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -120,7 +120,7 @@ export async function main(ns) {
 		await ns.sleep(16 * serverlist.length);
 	}
 	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
-		while (n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
+		while (ns.getPlayer()['hacking'] == startlevel & n00dles.moneyAvailable * 2 > n00dles.moneyMax) {
 			ns.toast("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
