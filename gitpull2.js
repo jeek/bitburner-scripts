@@ -1,5 +1,6 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+	ns.tprint("Downloading jeekOS... getting list of files...");
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/gitpull.js', '/jeek/gitpull.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/hackit.js', '/jeek/hackit.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/start.js', '/jeek/start.js');
@@ -16,5 +17,9 @@ export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/batch.js', '/jeek/batch.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/commitcrime.js', '/jeek/commitcrime.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/installbackdoors.js', '/jeek/installbackdoors.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checkfirst.js', '/jeek/checkfirst.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checksource.js', '/jeek/checksource.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/POST.js', '/jeek/POST.js');
 	ns.toast('Scripts updated.');
+	ns.spawn("/jeek/checkfirst.js");
 }

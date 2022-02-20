@@ -38,10 +38,12 @@ export async function main(ns) {
 	ns.disableLog("disableLog");
 	ns.disableLog("sleep");
 	ns.disableLog("scan");
-
+while (true) {
 	var self = ns.getPlayer();
 	var startlevel = self['hacking'];
-	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js', '/jeek/installbackdoors.js', '/jeek/commitcrime.js'];
+	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js', '/jeek/installbackdoors.js'
+	//, '/jeek/commitcrime.js'
+	];
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
 		var pid = ns.run(prog, 1);
@@ -60,6 +62,9 @@ export async function main(ns) {
 			}
 		}
 	}
+	await ns.sleep(100);
+}
+	ns.spawn('/jeek/start2.js');
 	var target = "n00dles";
 	if (ns.getPlayer()['hacking'] > 5) {
 		target = await bestserver(ns);
