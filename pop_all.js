@@ -5,7 +5,7 @@ export async function main(ns) {
 	var pid;
 	for (var i = 0; i < serverlist.length; i++) {
 		if (serverlist[i] != "home") {
-			pid = ns.run('/jeek/hackit.js', 1, serverlist[i]));
+			pid = ns.run('/jeek/hackit.js', 1, serverlist[i]);
 			while (ns.isRunning(pid)) {
 				await ns.sleep(1);
 			}
@@ -15,12 +15,6 @@ export async function main(ns) {
 			if (!serverlist.includes(current[j])) {
 				serverlist.push(current[j]);
 			}
-		}
-		while (pids.length > 0) {
-			while (ns.isRunning(pids[0])) {
-				await ns.sleep(1);
-			}
-			pids.pop(0);
 		}
 	}
 }

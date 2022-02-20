@@ -13,5 +13,8 @@ export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/start2.js', '/jeek/start2.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/purchaseservers.js', '/jeek/purchaseservers.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/pop_all.js', '/jeek/pop_all.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/batch.js', '/jeek/batch.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/commitcrime.js', '/jeek/commitcrime.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/installbackdoors.js', '/jeek/installbackdoors.js');
 	ns.toast('Scripts updated.');
 }

@@ -41,7 +41,7 @@ export async function main(ns) {
 
 	var self = ns.getPlayer();
 	var startlevel = self['hacking'];
-	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js'];
+	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js', '/jeek/installbackdoors.js', '/jeek/commitcrime.js'];
 	for (var progi in bootstrap) {
 		var prog = bootstrap[progi];
 		var pid = ns.run(prog, 1);
@@ -67,7 +67,7 @@ export async function main(ns) {
 		ns.nuke('n00dles');
 	}
 	var n00dles = ns.getServer(target);
-	while ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95)) {
+	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
 		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
@@ -85,6 +85,7 @@ export async function main(ns) {
 			while (ns.isRunning('/jeek/weaken.js', 'home', target)) {
 				await ns.sleep(100);
 			}
+			n00dles = ns.getServer(target);
 		}
 		if (n00dles.moneyAvailable < n00dles.moneyMax * .95) {
 			ns.toast("Grow on " + target);
