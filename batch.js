@@ -4,7 +4,6 @@ function fGetServer(ns, serverName) {
 	var data = ns.getServer(serverName);
 	if (serverName == "home") {
 		data.maxRam = Math.max(0, data.maxRam - 100);
-		data.ramUsed = Math.max(0, data.ramUsed - 100);
 	}
 	return data;
 }
