@@ -1,6 +1,6 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-	ns.tprint("Downloading jeekOS... getting list of files...");
+	ns.tprint("Downloading jeekOS... downloading files...");
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/gitpull.js', '/jeek/gitpull.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/hackit.js', '/jeek/hackit.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/start.js', '/jeek/start.js');
