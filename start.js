@@ -69,7 +69,7 @@ export async function main(ns) {
 	} else {
 		ns.nuke('n00dles');
 	}
-    if (ns.getServerMaxRam("home") + ns.getPurchasedServers().map(x => getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024) {
+    if (ns.getServerMaxRam("home") + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024) {
 	    ns.spawn('/jeek/bootstraphack.js', 1, target);
 	} else {
 		ns.run('/jeek/checktarget.js', 1, target);
