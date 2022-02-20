@@ -11,7 +11,12 @@ function fGetServer(ns, serverName) {
 
 export async function main(ns) {
 	ns.disableLog("disableLog");
+	ns.disableLog("getServerUsedRam");
+	ns.disableLog("getServerMaxRam");
+	ns.disableLog("getServerSecurityLevel");
+	ns.disableLog("getServerMinSecurityLevel");
 	ns.disableLog("scp");
+	ns.disableLog("sleep");
 	var resolution = 100;
 	var ratio = 0.1;
 	var pids = [];
