@@ -59,7 +59,6 @@ export async function main(ns) {
 	while (ns.getServerMoneyAvailable(ns.args[0]) < ns.getServerMaxMoney(ns.args[0])) {
 		var threadsNeeded = 5 + Math.ceil(ns.growthAnalyze(ns.args[0], ns.getServerMaxMoney(ns.args[0]) / ns.getServerMoneyAvailable(ns.args[0])));
 		ns.tprint(threadsNeeded.toString() + " needed for grow");
-		ns.killall();
 		while (threadsNeeded > 0) {
 			pickServers.sort(function compare2(a, b) {
 				return (ns.getServer(a).maxRam - ns.getServer(a).ramUsed) - (ns.getServer(b).maxRam - ns.getServer(b).ramUsed);
@@ -268,7 +267,7 @@ export async function main(ns) {
 		if (freeMem > ramNeeded) {
 			var goodToGo = true;
 			for (var i = 0; i < final.length; i++) {
-				if (queue.filter(x => (Date.now() + final[i][2] - resolution <= Date.now()) & Date.now() + final[i][2] + resolution >= Date.now()).length > 0) {
+				if (queue.filter(x => (Date.now() + final[i][2] - resolution <= x[0]) & (Date.now() + final[i][2] + resolution >= x[0])).length > 0) {
 					var goodToGo = false;
 				}
 			}
@@ -277,7 +276,11 @@ export async function main(ns) {
 					queue.push([Date.now() + final[i][2], final[i][0], final[i][1]]);
 				}
 				piped = piped + ramNeeded;
+			} else {
+				ns.tprint("Collision.")
 			}
+		} else {
+			ns.tprint("Not enough free memory: " + freeMem.toString())
 		}
 		ns.tprint("Queue: ", queue);
 		var doItNow = queue.filter(x => x[0] <= Date.now()).filter(y => y[1] != "null");
