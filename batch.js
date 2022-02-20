@@ -261,7 +261,6 @@ export async function main(ns) {
 
 	var queue = []; // [timestamp, action, threads]
 	while (true) {
-		ns.run('/jeek/pop_all.js');
 		var final = [
 			['hack', hackThreads, adjust - ns.getHackTime(ns.args[0])],
 			['weaken', weaken1ThreadsNeeded, adjust - ns.getWeakenTime(ns.args[0]) + resolution],
