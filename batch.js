@@ -9,10 +9,6 @@ function fGetServer(ns, serverName) {
 	return data;
 }
 
-function cleanup(ns) {
-
-}
-
 export async function main(ns) {
 		var pickServers = ['home'];
 		for (var i = 0; i < pickServers.length; i++) {
@@ -62,7 +58,7 @@ export async function main(ns) {
 	pickServers = pickServers.filter(x => ns.hasRootAccess(x));
 	//	pickServers = pickServers.filter(x => ns.hasRootAccess(x)).filter(y => y != "home");
 	// Prep -> Weaken / Grow
-	while ((ns.getServerMinSecurityLevel(ns.args[0]) < ns.getServerSecurityLevel(ns.args[0])) | (ns.getServerMoneyAvailable(ns.args[0]) < ns.getServerMaxMoney(ns.args[0]))) {
+	while ((ns.getServerMinSecurityLevel(ns.args[0]) < ns.getServerSecurityLevel(ns.args[0])) || (ns.getServerMoneyAvailable(ns.args[0]) < ns.getServerMaxMoney(ns.args[0]))) {
 		if (ns.getServerMinSecurityLevel(ns.args[0]) < ns.getServerSecurityLevel(ns.args[0])) {
 			var threadsNeeded = 1;
 			while (ns.weakenAnalyze(threadsNeeded) < ns.getServerSecurityLevel(ns.args[0]) - ns.getServerMinSecurityLevel(ns.args[0])) {

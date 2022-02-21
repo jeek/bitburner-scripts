@@ -14,7 +14,7 @@ export async function main(ns) {
 	}
 	var z = 0;
 	for (var i = 0; i < serverlist.length; i++) {
-		if (ns.hasRootAccess(serverlist[i]) & serverlist[i] != "home" & !(ns.getServer(serverlist[i]).purchasedByPlayer) & !(ns.getServer(serverlist[i]).backdoorInstalled) & ns.getServer(serverlist[i]).requiredHackingSkill <= ns.getPlayer()['hacking']) {
+		if (ns.hasRootAccess(serverlist[i]) & serverlist[i] != "home" && !(ns.getServer(serverlist[i]).purchasedByPlayer) && !(ns.getServer(serverlist[i]).backdoorInstalled) && ns.getServer(serverlist[i]).requiredHackingSkill <= ns.getPlayer()['hacking']) {
 			ns.toast("Backdooring " + serverlist[i]);
 			ns.connect("home");
 			var j = serverlist[i];

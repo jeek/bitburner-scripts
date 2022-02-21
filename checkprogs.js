@@ -20,13 +20,13 @@ export async function main(ns) {
 	var progs = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe']
 	for (var j in progs) {
 		var i = progs[j];
-		if (self.tor & !ns.fileExists(i)) {
+		if (self.tor && !ns.fileExists(i)) {
 			if (ns.purchaseProgram(i)) {
 				ns.toast("Purchased " + i);
 				startover(ns);
 			}
 		}
-		if (self['hacking'] >= cost[i] & !ns.fileExists(i)) {
+		if (self['hacking'] >= cost[i] && !ns.fileExists(i)) {
 			if (!ns.isBusy()) {
 				if (ns.createProgram(i, false)) {
 					ns.toast("Writing " + i);
