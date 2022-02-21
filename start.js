@@ -25,12 +25,13 @@ async function bestserver(ns) {
 		ns.hackAnalyzeChance(a) * (100 - ns.getServer(a).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(a) - 1)) * ns.getServerMaxMoney(a) / (ns.getHackTime(a) * ns.hackAnalyzeThreads(a, 1)) -
 			ns.hackAnalyzeChance(b) * (100 - ns.getServer(b).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(b) - 1)) * ns.getServerMaxMoney(b) / (ns.getHackTime(b) * ns.hackAnalyzeThreads(b, 1))
 	});
+	serverlist = serverlist.filter(x => x != "avmnite-02h" );
 	if (serverlist.length > 0) {
 		targetserver = serverlist[serverlist.length - 1];
 	} else {
 		targetserver = n00dles;
 	}
-//	ns.toast("Best Server: " + targetserver);
+	// ns.toast("Best Server: " + targetserver);
 	return targetserver;
 }
 
@@ -38,40 +39,42 @@ export async function main(ns) {
 	ns.disableLog("disableLog");
 	ns.disableLog("sleep");
 	ns.disableLog("scan");
-
-	var self = ns.getPlayer();
-	var startlevel = self['hacking'];
-	var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js', '/jeek/installbackdoors.js'
-	//, '/jeek/commitcrime.js'
-	];
-	for (var progi in bootstrap) {
-		var prog = bootstrap[progi];
-		var pid = ns.run(prog, 1);
-		if (pid > 0) {
-			while (ns.isRunning(pid)) {
-				await ns.sleep(100);
+	while (true) {
+		var self = ns.getPlayer();
+		var startlevel = self['hacking'];
+		var bootstrap = ['/jeek/pop_all.js', '/jeek/purchasetor.js', '/jeek/checkprogs.js', '/jeek/upgradehomeram.js', '/jeek/purchaseservers.js', '/jeek/installbackdoors.js'
+			//, '/jeek/commitcrime.js'
+		];
+		for (var progi in bootstrap) {
+			var prog = bootstrap[progi];
+			var pid = ns.run(prog, 1);
+			if (pid > 0) {
+				while (ns.isRunning(pid)) {
+					await ns.sleep(100);
+				}
 			}
 		}
-	}
-	var serverlist = ['home'];
-	for (var i = 0; i < serverlist.length; i++) {
-		var current = ns.scan(serverlist[i]);
-		for (var j = 0; j < current.length; j++) {
-			if (!serverlist.includes(current[j])) {
-				serverlist.push(current[j]);
+		var serverlist = ['home'];
+		for (var i = 0; i < serverlist.length; i++) {
+			var current = ns.scan(serverlist[i]);
+			for (var j = 0; j < current.length; j++) {
+				if (!serverlist.includes(current[j])) {
+					serverlist.push(current[j]);
+				}
 			}
 		}
-	}
-	await ns.sleep(100);
-	var target = "n00dles";
-	if (ns.getPlayer()['hacking'] > 5) {
-		target = await bestserver(ns);
-	} else {
-		ns.nuke('n00dles');
-	}
-    if (ns.getServerMaxRam("home") + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024) {
-	    ns.spawn('/jeek/bootstraphack.js', 1, target);
-	} else {
-		ns.run('/jeek/checktarget.js', 1, target);
+		await ns.sleep(100);
+		var target = "n00dles";
+		if (ns.getPlayer()['hacking'] > 5) {
+			target = await bestserver(ns);
+		} else {
+			ns.nuke('n00dles');
+		}
+		if (ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 800) {
+			ns.spawn('/jeek/bootstraphack.js', 1, target);
+		} else {
+			ns.run('/jeek/checktarget.js', 1, target);
+		}
+		await ns.sleep(1);
 	}
 }

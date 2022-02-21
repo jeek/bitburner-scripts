@@ -33,9 +33,9 @@ export async function main(ns) {
 						if (ns.purchaseServer(newname, targetRam)) {
 							ns.toast("Purchased a " + targetRam.toString() + "GB Server...")
 							startover(ns);
-							ns.scp('/jeek/hack.js', newname);
-							ns.scp('/jeek/grow.js', newname);
-							ns.scp('/jeek/weaken.js', newname);
+							await ns.scp('/jeek/hack.js', newname);
+							await ns.scp('/jeek/grow.js', newname);
+							await ns.scp('/jeek/weaken.js', newname);
 						}
 					}
 				}

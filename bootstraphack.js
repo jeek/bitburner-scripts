@@ -1,7 +1,19 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+//	ns.tprint("Starting BSHack " + ns.args[0]);
+	var startlevel = ns.getPlayer()['hacking'];
 	var target = ns.args[0];
+	var serverlist = ['home'];
+	for (var i = 0; i < serverlist.length; i++) {
+		var current = ns.scan(serverlist[i]);
+		for (var j = 0; j < current.length; j++) {
+			if (!serverlist.includes(current[j])) {
+				serverlist.push(current[j]);
+			}
+		}
+	}
 	var n00dles = ns.getServer(target);
+//	ns.tprint(n00dles.minDifficulty, " ", n00dles.hackDifficulty, " ", n00dles.moneyAvailable, " ", n00dles.moneyMax)
 	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
 		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
@@ -46,7 +58,7 @@ export async function main(ns) {
 	}
 	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
 		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.moneyAvailable * 2 > n00dles.moneyMax)) {
-			ns.toast("Hacking " + target);
+			ns.tprint("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
 					if (serverlist[i] != 'home') {
@@ -68,4 +80,5 @@ export async function main(ns) {
 		await ns.sleep(100);
 		ns.run('/jeek/start2.js', 1)
 	}
+
 }
