@@ -2,9 +2,9 @@
 export async function main(ns) {
 	var procs = ns.ps();
 	var z = 0;
-	//	ns.tprint(procs);
+	// ns.tprint(procs);
 	for (var i = 0; i < procs.length; i++) {
-		if ((procs[i].filename == "/jeekbatch.js") & (procs[i].args != [ns.args[0]])) {
+		if ((procs[i].filename == "/jeek/batch.js") & (procs[i].args[0] != ns.args[0])) {
 			ns.kill(procs[i].pid);
 			while (ns.isRunning(procs[i].pid)) {
 				await ns.sleep(1);
