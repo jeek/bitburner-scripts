@@ -13,7 +13,7 @@ function startover(ns) {
 export async function main(ns) {
 	if (ns.fileExists("relaySMTP.exe")) {
 		if (ns.getPurchasedServers().length < ns.getPurchasedServerLimit()) {
-			if (ns.purchaseServer("pserv-" + ns.getPurchasedServers().length.toString(), 32)) {
+			while (ns.purchaseServer("pserv-" + ns.getPurchasedServers().length.toString(), 32)) {
 				ns.toast("Purchased a 32GB Server...")
 				startover(ns);
 			}
