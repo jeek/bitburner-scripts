@@ -236,7 +236,9 @@ export async function main(ns) {
 		}
 	}
 	var growStopTime = Date.now();
-	ns.tprint(growStartTime.toString() + " " + growStopTime.toString() + " " + (growStopTime - growStartTime).toString());
+	if (debug) {
+		ns.tprint(growStartTime.toString() + " " + growStopTime.toString() + " " + (growStopTime - growStartTime).toString());
+	}
 	// Measure Weaken 2 Time
 	var weaken2ThreadsNeeded = 1;
 	while (ns.weakenAnalyze(weaken2ThreadsNeeded) < ns.getServerSecurityLevel(ns.args[0]) - ns.getServerMinSecurityLevel(ns.args[0])) {
