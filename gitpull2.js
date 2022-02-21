@@ -20,6 +20,7 @@ export async function main(ns) {
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checkfirst.js', '/jeek/checkfirst.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/checksource.js', '/jeek/checksource.js');
 	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/POST.js', '/jeek/POST.js');
+	await ns.wget('https://raw.githubusercontent.com/jeek/bitburner/main/metrics.js', '/jeek/metrics.js');
 	ns.toast('Scripts updated.');
 	ns.spawn("/jeek/checkfirst.js");
 }

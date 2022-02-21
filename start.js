@@ -30,7 +30,7 @@ async function bestserver(ns) {
 	} else {
 		targetserver = n00dles;
 	}
-	ns.toast("Best Server: " + targetserver);
+//	ns.toast("Best Server: " + targetserver);
 	return targetserver;
 }
 

@@ -18,7 +18,8 @@ export async function main(ns) {
 	ns.disableLog("scp");
 	ns.disableLog("sleep");
 	ns.disableLog("run");
-	var resolution = 100;
+	await ns.writePort(19, "PREP " + ns.args[0]);
+	var resolution = 50;
 	var ratio = 0.1;
 	var pids = [];
 	var debug = false;
@@ -29,6 +30,10 @@ export async function main(ns) {
 			await ns.scp('/jeek/hack.js', pickServers[i]);
 			await ns.scp('/jeek/weaken.js', pickServers[i]);
 			await ns.scp('/jeek/grow.js', pickServers[i]);
+			var procs = ns.ps(pickServers[i]);
+			for (var j = 0; j < procs.length; j++) {
+				ns.kill(procs[j].pid)
+			}
 		}
 		var current = ns.scan(pickServers[i]);
 		for (var j = 0; j < current.length; j++) {
@@ -55,7 +60,7 @@ export async function main(ns) {
 				})
 				if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/weaken.js')) {
 					var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/weaken.js')));
-					pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+					pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "PREP", Math.random()));
 					if (pids[pids.length - 1] > 0) {
 						threadsNeeded -= threadsUsed;
 						if (debug) {
@@ -81,7 +86,7 @@ export async function main(ns) {
 				})
 				if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/grow.js')) {
 					var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/grow.js')));
-					pids.push(ns.exec('/jeek/grow.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+					pids.push(ns.exec('/jeek/grow.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "PREP", Math.random()));
 					if (pids[pids.length - 1] > 0) {
 						threadsNeeded -= threadsUsed;
 						if (debug) {
@@ -116,19 +121,19 @@ export async function main(ns) {
 		}
 	}
 	// Measure Hack Time
-	var hackThreads = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
-	var hackStartTime = Date.now();
-	var threadsNeeded = hackThreads;
+	var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
+	var threadsNeeded = hackThreadsNeeded;
 	if (debug) {
-		ns.tprint(hackThreads);
+		ns.tprint(hackThreadsNeeded);
 	}
+	var hackStartTime = Date.now();
 	while (threadsNeeded > 0) {
 		pickServers.sort(function compare3(a, b) {
 			return (fGetServer(ns, a).maxRam - fGetServer(ns, a).ramUsed) - (fGetServer(ns, b).maxRam - fGetServer(ns, b).ramUsed);
 		})
 		if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/hack.js')) {
 			var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/hack.js')));
-			pids.push(ns.exec('/jeek/hack.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+			pids.push(ns.exec('/jeek/hack.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "MEASURE h", Math.random()));
 			if (pids[pids.length - 1] > 0) {
 				threadsNeeded -= threadsUsed;
 				if (debug) {
@@ -165,7 +170,7 @@ export async function main(ns) {
 		})
 		if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/weaken.js')) {
 			var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/weaken.js')));
-			pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+			pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "MEASURE w1", Math.random()));
 			if (pids[pids.length - 1] > 0) {
 				threadsNeeded -= threadsUsed;
 			} else {
@@ -195,7 +200,7 @@ export async function main(ns) {
 		})
 		if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/grow.js')) {
 			var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/grow.js')));
-			pids.push(ns.exec('/jeek/grow.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+			pids.push(ns.exec('/jeek/grow.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "MEASURE g", Math.random()));
 			if (pids[pids.length - 1] > 0) {
 				threadsNeeded -= threadsUsed;
 			} else {
@@ -227,7 +232,7 @@ export async function main(ns) {
 		})
 		if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/weaken.js')) {
 			var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/weaken.js')));
-			pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+			pids.push(ns.exec('/jeek/weaken.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], "MEASURE w2", Math.random()));
 			if (pids[pids.length - 1] > 0) {
 				threadsNeeded -= threadsUsed;
 			} else {
@@ -247,30 +252,47 @@ export async function main(ns) {
 	if (debug) {
 		ns.tprint(weaken2StartTime.toString() + " " + weaken2StopTime.toString() + " " + (weaken2StopTime - weaken2StartTime).toString());
 
-		ns.tprint(hackThreads, " ", weaken1ThreadsNeeded, " ", growThreadsNeeded, " ", weaken2ThreadsNeeded);
+		ns.tprint(hackThreadsNeeded, " ", weaken1ThreadsNeeded, " ", growThreadsNeeded, " ", weaken2ThreadsNeeded);
 	}
-	var ramNeeded = hackThreads * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script');
+	var ramNeeded = hackThreadsNeeded * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script');
 	if (debug) {
-		ns.tprint(hackThreads * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script'));
+		ns.tprint(hackThreadsNeeded * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script'));
 	}
 	var weaken1Dur = weaken1StopTime - weaken1StartTime;
 	var weaken2Dur = weaken2StopTime - weaken2StartTime;
 	var hackDur = hackStopTime - hackStartTime;
 	var growDur = growStopTime - growStartTime;
-	var adjust = Math.min(ns.getWeakenTime(ns.args[0]), ns.getHackTime(ns.args[0]), ns.getGrowTime(ns.args[0]));
 
 	var queue = []; // [timestamp, action, threads]
-	while (true) {
+	await ns.writePort(19, "START " + ns.args[0]);
+	// Trust Game Functions?
+	if (true) {
+		var adjust = Math.max(ns.getWeakenTime(ns.args[0]), ns.getHackTime(ns.args[0]), ns.getGrowTime(ns.args[0]));
 		var final = [
-			['hack', hackThreads, adjust - ns.getHackTime(ns.args[0])],
+			['hack', hackThreadsNeeded, adjust - ns.getHackTime(ns.args[0])],
 			['weaken', weaken1ThreadsNeeded, adjust - ns.getWeakenTime(ns.args[0]) + resolution],
 			['grow', growThreadsNeeded, adjust - ns.getGrowTime(ns.args[0]) + resolution * 2],
 			['weaken', weaken2ThreadsNeeded, adjust - ns.getWeakenTime(ns.args[0]) + resolution * 3],
-			['null', hackThreads, adjust],
-			['null', hackThreads, adjust + resolution],
-			['null', hackThreads, adjust + resolution * 2],
-			['null', hackThreads, adjust + resolution * 3],
+			['null', hackThreadsNeeded, adjust],
+			['null', hackThreadsNeeded, adjust + resolution],
+			['null', hackThreadsNeeded, adjust + resolution * 2],
+			['null', hackThreadsNeeded, adjust + resolution * 3],
 		]
+	} else {
+		var adjust = Math.max(weaken1Dur, weaken2Dur, hackDur, growDur);
+		var final = [
+			['hack', hackThreadsNeeded, adjust - hackDur],
+			['weaken', weaken1ThreadsNeeded, adjust - weaken1Dur + resolution],
+			['grow', growThreadsNeeded, adjust - growDur + resolution * 2],
+			['weaken', weaken2ThreadsNeeded, adjust - weaken2Dur + resolution * 3],
+			['null', hackThreadsNeeded, adjust],
+			['null', hackThreadsNeeded, adjust + resolution],
+			['null', hackThreadsNeeded, adjust + resolution * 2],
+			['null', hackThreadsNeeded, adjust + resolution * 3],
+		]
+	}
+	var batchNo = 1;
+	while (true) {
 		// Stack Them Up
 		var freeMem = pickServers.map(x => ns.getServerMaxRam(x) - ns.getServerUsedRam(x)).filter(w => w >= 0.15).reduce((a, b) => a + b, 0) - queue.filter(y => y[1] != null).map(z => ns.getScriptRam('/jeek/' + z[1] + ".js") * z[2]).reduce((c, d) => c + d, 0);
 		if (freeMem > ramNeeded) {
@@ -282,8 +304,9 @@ export async function main(ns) {
 			}
 			if (goodToGo) {
 				for (var i = 0; i < final.length; i++) {
-					queue.push([Date.now() + final[i][2], final[i][0], final[i][1]]);
+					queue.push([Date.now() + final[i][2], final[i][0], final[i][1], batchNo]);
 				}
+				batchNo = batchNo + 1;
 			} else {
 				if (debug) {
 					ns.tprint("Collision. " + queue.filter(y => y[1] != null).map(z => ns.getScriptRam('/jeek/' + z[1] + ".js") * z[2]).reduce((c, d) => c + d, 0).toString());
@@ -307,19 +330,19 @@ export async function main(ns) {
 				})
 				if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/' + doItNow[i][1] + '.js')) {
 					var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/' + doItNow[i][1] + '.js')));
-					pids.push(ns.exec('/jeek/' + doItNow[i][1] + '.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], Math.random()));
+					pids.push(ns.exec('/jeek/' + doItNow[i][1] + '.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], doItNow[i][3], Math.random()));
 					if (pids[pids.length - 1] > 0) {
 						threadsNeeded -= threadsUsed;
 						pids.pop(pids.length - 1);
 					} else {
 						threadsNeeded -= threadsUsed;
-						pids.pop(pids.length - 1);
+						//						pids.pop(pids.length - 1);
 						//						ns.tprint("This shouldn't be happening now.")
-						ns.exec('/jeek/' + doItNow[i][1] + '.js', 'home', threadsUsed, ns.args[0], Math.random())
-						await ns.sleep(1);
+						//						ns.exec('/jeek/' + doItNow[i][1] + '.js', 'home', threadsUsed, ns.args[0], Math.random())
+						//						await ns.sleep(1);
 					}
 				}
-				await ns.sleep(1);
+				//				await ns.sleep(1);
 			}
 
 		}
