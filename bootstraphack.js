@@ -1,5 +1,7 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+	var ratio=.3;
+	var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
 //	ns.tprint("Starting BSHack " + ns.args[0]);
 	var startlevel = ns.getPlayer()['hacking'];
 	var target = ns.args[0];
@@ -14,8 +16,8 @@ export async function main(ns) {
 	}
 	var n00dles = ns.getServer(target);
 //	ns.tprint(n00dles.minDifficulty, " ", n00dles.hackDifficulty, " ", n00dles.moneyAvailable, " ", n00dles.moneyMax)
-	while ((ns.getPlayer()['hacking'] == startlevel) && ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) || (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
-		while ((ns.getPlayer()['hacking'] == startlevel) && (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
+	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
+		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -56,8 +58,8 @@ export async function main(ns) {
 		n00dles = ns.getServer(target);
 		await ns.sleep(16 * serverlist.length);
 	}
-	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) && (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
-		while ((ns.getPlayer()['hacking'] == startlevel) && (n00dles.moneyAvailable * 2 > n00dles.moneyMax)) {
+	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
+		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.moneyAvailable * 2 > n00dles.moneyMax)) {
 			ns.tprint("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -65,7 +67,7 @@ export async function main(ns) {
 						await ns.scp('/jeek/hack.js', serverlist[i]);
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')) >= 1) {
-						ns.exec('/jeek/hack.js', serverlist[i], Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')), target);
+						ns.exec('/jeek/hack.js', serverlist[i], Math.ceil(ratio / (ns.hackAnalyze(target))), target);
 					}
 				}
 			}

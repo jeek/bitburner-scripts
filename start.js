@@ -25,7 +25,7 @@ async function bestserver(ns) {
 		ns.hackAnalyzeChance(a) * (100 - ns.getServer(a).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(a) - 1)) * ns.getServerMaxMoney(a) / (ns.getHackTime(a) * ns.hackAnalyzeThreads(a, 1)) -
 			ns.hackAnalyzeChance(b) * (100 - ns.getServer(b).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(b) - 1)) * ns.getServerMaxMoney(b) / (ns.getHackTime(b) * ns.hackAnalyzeThreads(b, 1))
 	});
-	serverlist = serverlist.filter(x => x != "avmnite-02h" );
+	serverlist = serverlist.filter(x => x != "avmnite-02h" ).filter(y => !(ns.getPurchasedServers().includes(y)));
 	if (serverlist.length > 0) {
 		targetserver = serverlist[serverlist.length - 1];
 	} else {
@@ -70,7 +70,7 @@ export async function main(ns) {
 		} else {
 			ns.nuke('n00dles');
 		}
-		if (ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 800) {
+		if (ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024) {
 			ns.spawn('/jeek/bootstraphack.js', 1, target);
 		} else {
 			ns.run('/jeek/checktarget.js', 1, target);
