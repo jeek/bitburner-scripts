@@ -66,6 +66,7 @@ export async function main(ns) {
 			while (ns.weakenAnalyze(threadsNeeded) < ns.getServerSecurityLevel(ns.args[0]) - ns.getServerMinSecurityLevel(ns.args[0])) {
 				threadsNeeded = threadsNeeded += 1;
 			}
+			threadsNeeded += Math.ceil(.004 * (5 + Math.ceil(ns.growthAnalyze(ns.args[0], ns.getServerMaxMoney(ns.args[0]) / ns.getServerMoneyAvailable(ns.args[0])))));
 			if (debug) {
 				ns.tprint(threadsNeeded.toString() + " needed for first weaken");
 			}
