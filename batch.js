@@ -306,6 +306,7 @@ export async function main(ns) {
 			['null', hackThreadsNeeded, adjust + resolution * 3],
 			['null', hackThreadsNeeded, adjust + resolution * 4]
 		]
+		var newadjust = ns.getHackTime(ns.args[0]);
 	} else {
 		var adjust = Math.max(weaken1Dur, weaken2Dur, hackDur, growDur);
 		var final = [
@@ -319,6 +320,7 @@ export async function main(ns) {
 			['null', hackThreadsNeeded, adjust + resolution * 3],
 			['null', hackThreadsNeeded, adjust + resolution * 4]
 		]
+		var newadjust = hackDur;
 	}
 	//ns.tprint(ns.getServerMinSecurityLevel(ns.args[0]), " ",  ns.getServerSecurityLevel(ns.args[0]), " ",  ns.getServerMaxMoney(ns.args[0]), " ", ns.getServerMoneyAvailable(ns.args[0]));
 	//ns.tprint(ns.getWeakenTime(ns.args[0]), " ", ns.getHackTime(ns.args[0]), " ", ns.getGrowTime(ns.args[0]))
@@ -334,11 +336,12 @@ export async function main(ns) {
 					for (var j = 0; j < procs.length; j++) {
 						if (procs[j].filename == "/jeek/hack.js") { //} ||
 							//	procs[j].filename == "/jeek/grow.js") {
-							ns.kill(procs[j].pid);
+							//ns.kill(procs[j].pid);
 						}
 					}
 				}
-				queue = queue.filter(x => x[1] == 'null' || x[1] == 'weaken' || x[1] == 'grow');
+				//				queue = queue.filter(x => x[1] == 'null' || x[1] == 'weaken' || x[1] == 'grow');
+				queue = queue.map(x => (x[1] == '/jeek/hack.js') ? [x[0] + newadjust - ns.getHackTime(ns.args[0]), x[1], x[2], x[3]] : [x[0], x[1], x[2], x[3]]);
 				//				while (ns.getServerSecurityLevel(ns.args[0]) > ns.getServerMinSecurityLevel(ns.args[0])) {
 				//					await ns.sleep(1);
 				//				}
@@ -469,6 +472,7 @@ export async function main(ns) {
 					['null', hackThreadsNeeded, adjust + resolution * 3],
 					['null', hackThreadsNeeded, adjust + resolution * 4]
 				]
+				var newadjust = ns.getHackTime(ns.args[0]);
 			} else {
 				var adjust = Math.max(weaken1Dur, weaken2Dur, hackDur, growDur);
 				var final = [
@@ -482,6 +486,7 @@ export async function main(ns) {
 					['null', hackThreadsNeeded, adjust + resolution * 3],
 					['null', hackThreadsNeeded, adjust + resolution * 4]
 				]
+				var newadjust = hackDur;
 			}
 		}
 		// Stack Them Up
@@ -523,7 +528,9 @@ export async function main(ns) {
 				//				if ((fGetServer(ns, pickServers[pickServers.length - 4]).maxRam - fGetServer(ns, pickServers[pickServers.length - 4]).RamUsed) >= minMem) {
 				if (fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed > ns.getScriptRam('/jeek/' + doItNow[i][1] + '.js')) {
 					var threadsUsed = Math.min(threadsNeeded, Math.floor((fGetServer(ns, pickServers[pickServers.length - 1]).maxRam - fGetServer(ns, pickServers[pickServers.length - 1]).ramUsed) / ns.getScriptRam('/jeek/' + doItNow[i][1] + '.js')));
-					pids.push(ns.exec('/jeek/' + doItNow[i][1] + '.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], doItNow[i][3], Math.random()));
+					if (doItNow[i][1] == 'weaken' || (doItNow[1] == 'grow' && ns.getServerSecurityLevel(ns.args[0]) == ns.getServerMinSecurityLevel(ns.args[0])) || (doItNow[1] == 'hack' && ns.getServerMaxMoney(ns.args[0]) == ns.getServerMoneyAvailable(ns.args[0]) && ns.getServerSecurityLevel(ns.args[0]) == ns.getServerMinSecurityLevel(ns.args[0]))) {
+						pids.push(ns.exec('/jeek/' + doItNow[i][1] + '.js', pickServers[pickServers.length - 1], threadsUsed, ns.args[0], doItNow[i][3], Math.random()));
+
 					if (pids[pids.length - 1] > 0) {
 						threadsNeeded -= threadsUsed;
 						pids.pop(pids.length - 1);
@@ -534,6 +541,7 @@ export async function main(ns) {
 						//						ns.tprint("This shouldn't be happening now.")
 						//						ns.exec('/jeek/' + doItNow[i][1] + '.js', 'home', threadsUsed, ns.args[0], Math.random())
 						//						await ns.sleep(1);
+					}
 					}
 				} else {
 					await ns.sleep(1);
