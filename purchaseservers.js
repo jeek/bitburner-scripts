@@ -20,7 +20,7 @@ export async function main(ns) {
 		} else {
 			if (ns.fileExists("SQLInject.exe")) {
 				var servers = ns.getPurchasedServers().map(x => ns.getServer(x)).sort(function (a, b) {
-					a.maxRam - b.maxRam;
+					return a.maxRam - b.maxRam;
 				});
 				var targetRam = servers[0].maxRam * servers[0].maxRam;
 				if (targetRam > ns.getPurchasedServerMaxRam()) {
@@ -29,6 +29,7 @@ export async function main(ns) {
 				if (targetRam > servers[0].maxRam) {
 					if (ns.getPurchasedServerCost(targetRam) <= ns.getPlayer().money) {
 						var newname = servers[0].hostname;
+						ns.killall(newname);
 						ns.deleteServer(newname);
 						if (ns.purchaseServer(newname, targetRam)) {
 							ns.toast("Purchased a " + targetRam.toString() + "GB Server...")

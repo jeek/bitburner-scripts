@@ -1,6 +1,6 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-	var ratio=.3;
+	var ratio=.1;
 	var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
 //	ns.tprint("Starting BSHack " + ns.args[0]);
 	var startlevel = ns.getPlayer()['hacking'];
@@ -16,8 +16,8 @@ export async function main(ns) {
 	}
 	var n00dles = ns.getServer(target);
 //	ns.tprint(n00dles.minDifficulty, " ", n00dles.hackDifficulty, " ", n00dles.moneyAvailable, " ", n00dles.moneyMax)
-	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty + 5 < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
-		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty + 5 < n00dles.hackDifficulty)) {
+	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty  < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
+		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -67,7 +67,7 @@ export async function main(ns) {
 						await ns.scp('/jeek/hack.js', serverlist[i]);
 					}
 					if (Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')) >= 1) {
-						ns.exec('/jeek/hack.js', serverlist[i], Math.ceil(ratio / (ns.hackAnalyze(target))), target);
+						ns.exec('/jeek/hack.js', serverlist[i], Math.max(1, Math.min(Math.floor((ns.getServerMaxRam(serverlist[i]) - ns.getServerUsedRam(serverlist[i])) / ns.getScriptRam('/jeek/hack.js')))), target);
 					}
 				}
 			}
