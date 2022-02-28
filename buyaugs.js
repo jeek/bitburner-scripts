@@ -1,8 +1,15 @@
 globalThis.augplan = [
 	[[4,
 		["CyberSec", ["Cranial Signal Processors - Gen I", "Cranial Signal Processors - Gen II", "BitWire", "Synaptic Enhancement Implant", "Neurotrainer I"]],
-		["Tian Di Hui", ["Neuroreceptor Management Implant", "Social Negotiation Assistant (S.N.A)", "Nuoptimal Nootropic Injector Implant", "ADR-V1 Pheromone Gene", "Speech Enhancement",]],
-		["NiteSec", ["DataJack", "Cranial Signal Processors - Gen III", "CRTX42-AA Gene Modification", "Neural-Retention Enhancement", "Embedded Netburner Module", "Neurotrainer II", "Artificial Synaptic Potentiation"]]
+		["Tian Di Hui", ["Speech Enhancement"]],
+		["Tian Di Hui", ["ADR-V1 Pheromone Gene"]],
+		["Tian Di Hui", ["Nuoptimal Nootropic Injector Implant"]],
+		["Tian Di Hui", ["Social Negotiation Assistant (S.N.A)"]],
+		["Tian Di Hui", ["Neuroreceptor Management Implant"]],
+		["NiteSec", ["DataJack", "Cranial Signal Processors - Gen III", "CRTX42-AA Gene Modification", "Neural-Retention Enhancement", "Embedded Netburner Module", "Neurotrainer II", "Artificial Synaptic Potentiation"]],
+		["The Black Hand", ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "The Black Hand", "DataJack", "Embedded Netburner Module", "Artificial Synaptic Potentiation"]],
+		["BitRunners", ["Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "DataJack", "Embedded Netburner Module", "Neurotrainer II"]],
+		["BitRunners", ["Embedded Netburner Module Core Implant", "Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink", "Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator"]]
 	]]
 ];
 
@@ -46,10 +53,20 @@ export async function main(ns) {
 		}
 		if (globalThis.augplan[0][0][target][0] == "Tian Di Hui") {
 			if (!ns.getPlayer().factions.includes("Tian Di Hui")) {
-				if (ns.getPlayer().city != "New Tokyo") {
+				if (ns.getPlayer().city != "New Tokyo" && ns.getPlayer().money >= 200000) {
 					ns.travelToCity("New Tokyo");
 				}
 				ns.joinFaction("Tian Di Hui");
+			}
+		}
+		if (globalThis.augplan[0][0][target][0] == "The Black Hand") {
+			if (!ns.getPlayer().factions.includes("The Black Hand")) {
+				ns.joinFaction("The Black Hand");
+			}
+		}
+		if (globalThis.augplan[0][0][target][0] == "BitRunners") {
+			if (!ns.getPlayer().factions.includes("BitRunners")) {
+				ns.joinFaction("BitRunners");
 			}
 		}
 		let ownedAugs = ns.getOwnedAugmentations(true);
