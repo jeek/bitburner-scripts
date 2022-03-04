@@ -29,6 +29,9 @@ export async function main(ns) {
 	await ns.wget(root + 'buyaugs.js', '/jeek/buyaugs.js');
 	await ns.wget(root + 'contracts.js', '/jeek/contracts.js');
 	await ns.wget(root + 'goto.js', '/jeek/goto.js');
+	await ns.wget(root + 'overview.js', '/jeek/overview.js');
+	await ns.wget(root + 'prepall.js', '/jeek/prepall.js');
+	await ns.wget(root + 'rooted.js', '/jeek/rooted.js');
 	ns.toast('Scripts updated.');
 	ns.spawn("/jeek/checkfirst.js");
 }

@@ -40,6 +40,42 @@ function subarray(ns, data) {
 // [9, 10, 11, 12]
 //
 // is [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7]
+
+function spiralmatrix(ns, data) {
+	//	ns.tprint(data);
+	var answer = [];
+	while (data.length > 0 && data[0].length > 0) {
+		// Top Row
+		if (data.length > 0 && data[0].length > 0) {
+			while (data[0].length > 0) {
+				answer.push(data[0].shift());
+			}
+			data.shift();
+		}
+		// Right Column
+		if (data.length > 0 && data[0].length > 0) {
+			for (let i = 0; i < data.length; i++) {
+				answer.push(data[i].pop());
+			}
+		}
+		// Bottom Row
+		if (data.length > 0 && data[0].length > 0) {
+			while (data[data.length - 1].length > 0) {
+				answer.push(data[data.length - 1].pop());
+			}
+			data.pop();
+		}
+		// Left Column
+		if (data.length > 0 && data[0].length > 0) {
+			for (let i = data.length - 1; i >= 0; i--) {
+				answer.push(data[i].shift());
+			}
+		}
+	}
+	//	ns.tprint(answer);
+	return answer;
+}
+
 // Array Jumping Game
 // You are given an array of integers where each element represents the
 // maximum possible jump distance from that position. For example, if you
@@ -214,19 +250,19 @@ function stocks4(ns, data) {
 	ns.tail();
 	ns.print(data);
 
-	var left = data[0];
-	var transactions = data[1];
+	let left = data[0];
+	let transactions = data[1];
 	if (left == 0) {
 		return 0;
 	}
 	if (transactions.length < 2) {
 		return 0;
 	}
-	var best = 0;
-	for (var i = 0 ; i < transactions.length ; i++) {
-        for (var j = i + 1 ; j < transactions.length ; j++) {
+	let best = 0;
+	for (let i = 0; i < transactions.length; i++) {
+		for (let j = i + 1; j < transactions.length; j++) {
 			if (transactions[i] < transactions[j]) {
-				best = Math.max(best, best-transactions[i] + transactions[j], best-transactions[i] + transactions[j] + stocks4(ns, [left-1, transactions.slice(j+1)]) );
+				best = Math.max(best, best - transactions[i] + transactions[j], best - transactions[i] + transactions[j] + stocks4(ns, [left - 1, transactions.slice(j + 1)]));
 			}
 		}
 	}
@@ -239,9 +275,9 @@ function stocks4(ns, data) {
 // bottom of the triangle. In each step of the path, you may only move to adjacent
 // numbers in the row below.
 function minpathtri(ns, data) {
-    while (data.length > 1) {
-		for (var i = 0 ; i < data[data.length - 2].length ; i++) {
-			data[data.length-2][i] = data[data.length-2][i] + Math.min(data[data.length-1][i],data[data.length-1][i+1]);
+	while (data.length > 1) {
+		for (var i = 0; i < data[data.length - 2].length; i++) {
+			data[data.length - 2][i] = data[data.length - 2][i] + Math.min(data[data.length - 1][i], data[data.length - 1][i + 1]);
 		}
 		data.pop();
 	}
@@ -358,12 +394,9 @@ export async function main(ns) {
 			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Algorithmic Stock Trader III") {
 				ns.toast(ns.codingcontract.attempt(stocks3(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
 				zz += 1;
-			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Algorithmic Stock Trader III") {
-				ns.toast(ns.codingcontract.attempt(stocks3(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
+			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Algorithmic Stock Trader IV") {
+				ns.toast(ns.codingcontract.attempt(stocks4(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
 				zz += 1;
-//} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Algorithmic Stock Trader IV") {
-//				ns.toast(ns.codingcontract.attempt(stocks4(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
-//				zz += 1;
 			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Subarray with Maximum Sum") {
 				ns.toast(ns.codingcontract.attempt(subarray(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
 				zz += 1;
@@ -375,6 +408,9 @@ export async function main(ns) {
 				zz += 1;
 			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Minimum Path Sum in a Triangle") {
 				ns.toast(ns.codingcontract.attempt(minpathtri(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
+				zz += 1;
+			} else if (ns.codingcontract.getContractType(currentcontracts[ii][1], currentcontracts[ii][0]) == "Spiralize Matrix") {
+				ns.toast(ns.codingcontract.attempt(spiralmatrix(ns, ns.codingcontract.getData(currentcontracts[ii][1], currentcontracts[ii][0])), currentcontracts[ii][1], currentcontracts[ii][0], { returnReward: true }));
 				zz += 1;
 			} else {
 				if (zz == 0) {
