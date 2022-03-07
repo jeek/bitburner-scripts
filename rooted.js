@@ -26,13 +26,6 @@ function bestserver(ns) {
 	});
 	serverlist = serverlist.filter(x => x != "The-Cave").filter(x => x != "run4theh111z").filter(x => x != "avmnite-02h" ).filter(x => x != ".").filter(x => x != "I.I.I.I" ).filter(y => !(ns.getPurchasedServers().includes(y)));
     return serverlist;
-	if (serverlist.length > 0) {
-		targetserver = serverlist[serverlist.length - 1];
-	} else {
-		targetserver = "n00dles";
-	}
-	// ns.toast("Best Server: " + targetserver);
-	return targetserver;
 }
 
 /** @param {NS} ns **/
@@ -57,8 +50,16 @@ export async function main(ns) {
 		return ns.getServer(a).moneyMax - ns.getServer(b).moneyMax;
 	});
 	serverlist = bestserver(ns);
+	let z = 0;
+	let totalram = ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0);
 	while (serverlist.length > 0) {
 		ns.run('/jeek/batch.js', 1, serverlist[serverlist.length-1], 'everyone');
 		serverlist.pop();
+		z += 1;
+		if (z * 2048 > totalram) {
+			while (serverlist.length > 0) {
+				serverlist.pop();
+			}
+		}
 	}
 }

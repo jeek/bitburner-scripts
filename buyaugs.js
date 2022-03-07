@@ -7,7 +7,7 @@ globalThis.augplan = [
 		["Tian Di Hui", ["Social Negotiation Assistant (S.N.A)"]],
 		["Tian Di Hui", ["Neuroreceptor Management Implant"]],
 		["Sector-12", ["CashRoot Starter Kit", "Speech Processor Implant", "Wired Reflexes"]],
-		["NiteSec", ["Cranial Signal Processors - Gen II", "Cranial Signal Processors - Gen III", "DataJack", "CRTX42-AA Gene Modification", "Neural-Retention Enhancement", "Embedded Netburner Module", "Neurotrainer II", "Artificial Synaptic Potentiation"]],
+		["NiteSec", ["Cranial Signal Processors - Gen II", "Cranial Signal Processors - Gen III", "CRTX42-AA Gene Modification", "Neural-Retention Enhancement", "Embedded Netburner Module", "Neurotrainer II", "Artificial Synaptic Potentiation"]],
 		["NWO", ["Power Recirculation Core", "Neurotrainer III"]],
 		["The Black Hand", ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "The Black Hand", "DataJack", "Embedded Netburner Module", "Artificial Synaptic Potentiation"]],
 		["BitRunners", ["Embedded Netburner Module Core Implant", "Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink", "Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "DataJack", "Embedded Netburner Module", "Neurotrainer II"]],
@@ -86,7 +86,7 @@ export async function main(ns) {
 				ns.joinFaction("BitRunners");
 			}
 		}
-				if (globalThis.augplan[0][0][target][0] == "Daedalus") {
+		if (globalThis.augplan[0][0][target][0] == "Daedalus") {
 			if (!ns.getPlayer().factions.includes("Daedalus")) {
 				ns.joinFaction("Daedalus");
 			}
@@ -113,11 +113,14 @@ export async function main(ns) {
 			goal = goal.filter(x => x != ownedAugs[i]);
 		}
 		// ns.tprint(goal);
-		if (ns.getFactionRep(faction) > 300000 && ns.getFactionFavor(faction) < 150) {
-			for (let i = 0; i < goal.length; i++) {
-				ns.purchaseAugmentation(faction, goal[i]);
+		let facgoals = [8, 66, 150];
+		for (let j = 0; j < facgoals.length; j++) {
+			if ((ns.getFactionFavorGain(faction) + ns.getFactionFavor(faction) >= facgoals[j]) && (ns.getFactionFavor(faction) < facgoals[j])) {
+				for (let i = 0; i < goal.length; i++) {
+					ns.purchaseAugmentation(faction, goal[i]);
+				}
+				goal = [];
 			}
-			goal = [];
 		}
 		if (goal.length > 0) {
 			let repToGain = 0;
@@ -135,8 +138,17 @@ export async function main(ns) {
 			}
 			ns.purchaseAugmentation(faction, goal[0]);
 		} else {
+			if (ns.getFactionFavor(faction) >= 150) {
+				while (ns.getPlayer().money > 0 && ns.getPlayer().money < ns.getAugmentationRepReq("NeuroFlux Governor")) {
+					ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
+				}
+			}
 			while (ns.purchaseAugmentation(faction, "NeuroFlux Governor")) {
-				// You get NOTHING.
+				if (ns.getFactionFavor(faction) >= 150) {
+					while (ns.getPlayer().money > 0 && ns.getPlayer().money < ns.getAugmentationRepReq("NeuroFlux Governor")) {
+						ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
+					}
+				}
 			}
 			ns.installAugmentations("/jeek/start.js");
 			ns.softReset('/jeek/start.js');

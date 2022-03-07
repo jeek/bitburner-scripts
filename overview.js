@@ -54,8 +54,23 @@ function bestserver(ns) {
 export async function main(ns) {
 	globalThis.doc = eval("document");
 	const hook0 = doc.getElementById('overview-extra-hook-0');
+	if (doc.getElementById('pserverarea') == null) {
+		const parentdiv = doc.getElementById('overview-extra-hook-0').parentNode.parentNode;
+		const pserverarea = document.createElement("tr");
+		doc.getElementById('overview-extra-hook-0').insertAdjacentElement('afterend', pserverarea);
+
+		pserverarea.setAttribute('id', 'pserverarea');
+
+	}
+	pserverarea.innerHTML = "";
 	const hook1 = doc.getElementById('overview-extra-hook-1');
 	const hook2 = doc.getElementById('overview-extra-hook-2');
+	ns.atExit(() => {
+		pserverarea.remove();
+		hook0.innerHTML = "";
+		hook1.innerHTML = "";
+		hook2.innerHTML = "";
+	});
 	hook2.innerHTML = "";
 	var curbestserver = "n00dles";
 	while (true) {
@@ -85,19 +100,19 @@ export async function main(ns) {
 		serversizes = serversizes.map(x => Math.ceil(Math.min(255, x * 256 / 20)).toString(16)).map(y => "#" + y + y + y)
 		serversizes = shuffle(serversizes);
 		ns.print(serversizes);
-		var servertable = "<RIGHT><TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0>";
+		var servertable = "<RIGHT><TABLE BORDER=0 WIDTH=100% CELLPADDING=0 CELLSPACING=0>";
 		for (var i = 0; i < 25; i++) {
 			if (i % 5 == 0) {
 				servertable = servertable + "<TR>";
 			}
-			servertable = servertable + "<TD BGCOLOR=" + serversizes[i] + ">&nbsp&nbsp;</TD>";
+			servertable = servertable + "<TD WIDTH=20% BGCOLOR=" + serversizes[i] + ">&nbsp&nbsp;&nbsp;&nbsp;</TD>";
 			if (i % 5 == 4) {
 				servertable = servertable + "</TR>";
 			}
 
 		}
 		servertable = servertable + "</TABLE></RIGHT>";
-		hook1.innerHTML = servertable;
+		pserverarea.innerHTML = "<TD COLSPAN=2>" + servertable + "</TD>";
 		await ns.sleep(1000);
 	}
 	hook0.innerHTML = "<center>30</center>";
