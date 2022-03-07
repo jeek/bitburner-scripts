@@ -11,7 +11,7 @@ globalThis.augplan = [
 		["NWO", ["Power Recirculation Core", "Neurotrainer III"]],
 		["The Black Hand", ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "The Black Hand", "DataJack", "Embedded Netburner Module", "Artificial Synaptic Potentiation"]],
 		["BitRunners", ["Embedded Netburner Module Core Implant", "Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink", "Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "DataJack", "Embedded Netburner Module", "Neurotrainer II"]],
-		["Clarke Incorporated", ["nextSENS Gene Modification", "Neuronal Densification", "FocusWire", "ADR-V2 Pheromone Gene"]],
+		["Clarke Incorporated", ["nextSENS Gene Modification", "Neuronal Densification", "FocusWire", "ADR-V2 Pheromone Gene", "Enhanced Social Interaction Implant"]],
 		["Blade Industries", ["Embedded Netburner Module", "HyperSight Corneal Implant", "Embedded Netburner Module Core Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule", "Embedded Netburner Module Core V2 Upgrade"]],
 		["ECorp", ["Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Analyze Engine", "ECorp HVMind Implant"]],
 		["NWO", ["Xanipher", "Power Recirculation Core", "ADR-V1 Pheromone Gene", "Embedded Netburner Module Analyze Engine", "Embedded Netburner Module", "Neurotrainer III"]],
@@ -139,13 +139,13 @@ export async function main(ns) {
 			ns.purchaseAugmentation(faction, goal[0]);
 		} else {
 			if (ns.getFactionFavor(faction) >= 150) {
-				while (ns.getPlayer().money > 0 && ns.getPlayer().money < ns.getAugmentationRepReq("NeuroFlux Governor")) {
+				while (ns.getPlayer().money > 0 && ns.getFactionRep(faction) < ns.getAugmentationRepReq("NeuroFlux Governor")) {
 					ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
 				}
 			}
 			while (ns.purchaseAugmentation(faction, "NeuroFlux Governor")) {
 				if (ns.getFactionFavor(faction) >= 150) {
-					while (ns.getPlayer().money > 0 && ns.getPlayer().money < ns.getAugmentationRepReq("NeuroFlux Governor")) {
+					while (ns.getPlayer().money > 0 && ns.getFactionRep(faction) < ns.getAugmentationRepReq("NeuroFlux Governor")) {
 						ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
 					}
 				}
