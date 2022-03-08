@@ -17,7 +17,11 @@ export async function main(ns) {
 	cost['relaySMTP.exe'] = 250;
 	cost['HTTPWorm.exe'] = 500;
 	cost['SQLInject.exe'] = 750;
-	var progs = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe']
+	cost['Formulas.exe'] = 1000;
+	if (ns.fileExists(self.createProgramName)) {
+		ns.stopAction();
+	}
+	var progs = ['BruteSSH.exe', 'FTPCrack.exe', 'relaySMTP.exe', 'HTTPWorm.exe', 'SQLInject.exe', 'Formulas.exe'];
 	for (var j in progs) {
 		var i = progs[j];
 		if (self.tor && !ns.fileExists(i)) {

@@ -32,6 +32,7 @@ export async function main(ns) {
 	await ns.wget(root + 'overview.js', '/jeek/overview.js');
 	await ns.wget(root + 'prepall.js', '/jeek/prepall.js');
 	await ns.wget(root + 'rooted.js', '/jeek/rooted.js');
+	await ns.wget(root + 'batch2.js', '/jeek/batch2.js');
 	ns.toast('Scripts updated.');
 	ns.spawn("/jeek/checkfirst.js");
 }

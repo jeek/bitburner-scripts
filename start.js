@@ -40,8 +40,8 @@ export async function main(ns) {
 	ns.disableLog("sleep");
 	ns.disableLog("scan");
 	while (true) {
-		if (ns.getServerMaxRam('home') >= 64) {
-			ns.run('/jeek/overview.js', 1);
+		if (ns.getServerMaxRam('home') > 64) {
+			ns.run('quicktest.js', 1);
 			ns.run('/jeek/prepall.js', 1);
 		}
 		var self = ns.getPlayer();
@@ -76,14 +76,15 @@ export async function main(ns) {
 		} else {
 			ns.nuke('n00dles');
 		}
-		if ((ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024)) {
+		//		if ((ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 1024)) {
+		if (ns.getPlayer()['hacking'] < 10) {
 			ns.spawn('/jeek/bootstraphack.js', 1, target);
-		} else if ((ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 32 * 1024)) {
+		} else if (ns.getPurchasedServers().length < 25 || !ns.fileExists('Formulas.exe') || (ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 32 * 1024)) {
 			ns.run('/jeek/checktarget.js', 1, target);
 		} else {
 			ns.run('/jeek/rooted.js');
 		}
-		await ns.sleep(1);
+		await ns.sleep(1000);
 	}
 	ns.run('quicktest.js', 1);
 }
