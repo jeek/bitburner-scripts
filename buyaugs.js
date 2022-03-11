@@ -1,21 +1,17 @@
 globalThis.augplan = [
 	[[4,
 		["CyberSec", ["Cranial Signal Processors - Gen I", "BitWire", "Synaptic Enhancement Implant", "Neurotrainer I"]],
-		["Tian Di Hui", ["Speech Enhancement"]],
-		["Tian Di Hui", ["ADR-V1 Pheromone Gene"]],
-		["Tian Di Hui", ["Nuoptimal Nootropic Injector Implant"]],
-		["Tian Di Hui", ["Social Negotiation Assistant (S.N.A)"]],
-		["Tian Di Hui", ["Neuroreceptor Management Implant"]],
 		["Sector-12", ["CashRoot Starter Kit", "Speech Processor Implant", "Wired Reflexes"]],
+		["Tian Di Hui", ["Neuroreceptor Management Implant", "Speech Processor Implant", "Social Negotiation Assistant (S.N.A)", "Nuoptimal Nootropic Injector Implant", "ADR-V1 Pheromone Gene", "Speech Enhancement"]],
 		["NiteSec", ["Cranial Signal Processors - Gen II", "Cranial Signal Processors - Gen III", "CRTX42-AA Gene Modification", "Neural-Retention Enhancement", "Embedded Netburner Module", "Neurotrainer II", "Artificial Synaptic Potentiation"]],
 		["NWO", ["Power Recirculation Core", "Neurotrainer III"]],
 		["The Black Hand", ["Neuralstimulator", "Embedded Netburner Module Core Implant", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "The Black Hand", "DataJack", "Embedded Netburner Module", "Artificial Synaptic Potentiation"]],
 		["BitRunners", ["Embedded Netburner Module Core Implant", "Embedded Netburner Module Core V2 Upgrade", "BitRunners Neurolink", "Artificial Bio-neural Network Implant", "Cranial Signal Processors - Gen V", "Neural Accelerator", "Enhanced Myelin Sheathing", "Cranial Signal Processors - Gen III", "Cranial Signal Processors - Gen IV", "DataJack", "Embedded Netburner Module", "Neurotrainer II"]],
-		["Clarke Incorporated", ["nextSENS Gene Modification", "Neuronal Densification", "FocusWire", "ADR-V2 Pheromone Gene", "Enhanced Social Interaction Implant"]],
-		["Blade Industries", ["Embedded Netburner Module", "HyperSight Corneal Implant", "Embedded Netburner Module Core Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule", "Embedded Netburner Module Core V2 Upgrade"]],
-		["ECorp", ["Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Analyze Engine", "ECorp HVMind Implant"]],
-		["NWO", ["Xanipher", "Power Recirculation Core", "ADR-V1 Pheromone Gene", "Embedded Netburner Module Analyze Engine", "Embedded Netburner Module", "Neurotrainer III"]],
 		["Fulcrum Technologies", ["PC Direct-Neural Interface NeuroNet Injector", "Artificial Bio-neural Network Implant", "Enhanced Myelin Sheathing", "Embedded Netburner Module Core V3 Upgrade", "PC Direct-Neural Interface Optimization Submodule", "Embedded Netburner Module Analyze Engine"]],
+		["NWO", ["Xanipher", "Power Recirculation Core", "ADR-V1 Pheromone Gene", "Embedded Netburner Module Analyze Engine", "Embedded Netburner Module", "Neurotrainer III"]],
+		["ECorp", ["Embedded Netburner Module Core V3 Upgrade", "Embedded Netburner Module Direct Memory Access Upgrade", "Embedded Netburner Module Analyze Engine", "ECorp HVMind Implant"]],
+		["Blade Industries", ["Embedded Netburner Module", "HyperSight Corneal Implant", "Embedded Netburner Module Core Implant", "PC Direct-Neural Interface", "PC Direct-Neural Interface Optimization Submodule", "Embedded Netburner Module Core V2 Upgrade"]],
+		["Clarke Incorporated", ["nextSENS Gene Modification", "Neuronal Densification", "FocusWire", "ADR-V2 Pheromone Gene", "Enhanced Social Interaction Implant"]],
 		["Daedalus", ["The Red Pill"]]
 	]]
 ];
@@ -29,12 +25,15 @@ function intersection(setA, setB, ns) {
 			_intersection.add(elem)
 		}
 	}
-	return _intersection
+	return _intersection;
 }
 
 /** @param {NS} ns **/
 export async function main(ns) {
-	// ns.tail();
+	//ns.tail();
+	if (ns.getPlayer().hacking > ns.getServerRequiredHackingLevel('w0r1d_d43m0n')) {
+		globalThis.augplan.unshift([[4, ["Daedalus", ["The Red Pill"]]]]);
+	}
 	let installedAugs = new Set(ns.getOwnedAugmentations(false));
 	//	ns.tprint(Array.from(installedAugs));
 	let target = null;
@@ -47,6 +46,7 @@ export async function main(ns) {
 			i = 1000000;
 		}
 	}
+	ns.print(target);
 	// ns.tprint(globalThis.augplan[0][0][target]);
 	if (target != null) {
 		//ns.toast(globalThis.augplan[0][0][target], "success", 10000);
@@ -86,8 +86,14 @@ export async function main(ns) {
 				ns.joinFaction("BitRunners");
 			}
 		}
+		ns.joinFaction("Daedalus");
+		//ns.tail();
+		ns.print("A");
 		if (globalThis.augplan[0][0][target][0] == "Daedalus") {
+			ns.print("B");
 			if (!ns.getPlayer().factions.includes("Daedalus")) {
+				ns.print("C");
+				ns.run('fl1ght.exe');
 				ns.joinFaction("Daedalus");
 			}
 		}
@@ -99,10 +105,16 @@ export async function main(ns) {
 		for (let i = 0; i < corps.length; i++) {
 			if (faction == corps[i]) {
 				if (!ns.getPlayer().factions.includes(corps[i])) {
-					ns.applyToCompany(globalThis.augplan[0][0][target][0], "IT");
-					ns.workForCompany(globalThis.augplan[0][0][target][0], false);
-					await ns.sleep(60000);
-					ns.stopAction();
+					if (!ns.isBusy()) {
+						if (ns.getPlayer().money > 1000000 && ns.getPlayer().charisma < 300) {
+							ns.universityCourse("Rothman University", "Leadership", false);
+						} else {
+							ns.applyToCompany(globalThis.augplan[0][0][target][0], "IT");
+							ns.workForCompany(globalThis.augplan[0][0][target][0], false);
+						}
+						await ns.sleep(60000);
+						ns.stopAction();
+					}
 					ns.joinFaction(corps[i]);
 				}
 			}
@@ -140,13 +152,13 @@ export async function main(ns) {
 		} else {
 			if (ns.getFactionFavor(faction) >= 150) {
 				while (ns.getPlayer().money > 0 && ns.getFactionRep(faction) < ns.getAugmentationRepReq("NeuroFlux Governor")) {
-					ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
+					ns.donateToFaction(faction, Math.ceil(ns.getPlayer().money / 10));
 				}
 			}
 			while (ns.purchaseAugmentation(faction, "NeuroFlux Governor")) {
 				if (ns.getFactionFavor(faction) >= 150) {
 					while (ns.getPlayer().money > 0 && ns.getFactionRep(faction) < ns.getAugmentationRepReq("NeuroFlux Governor")) {
-						ns.donateToFaction(faction, Math.Ceil(ns.getPlayer().money / 10));
+						ns.donateToFaction(faction, Math.ceil(ns.getPlayer().money / 10));
 					}
 				}
 			}

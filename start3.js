@@ -1,4 +1,10 @@
 /** @param {NS} ns **/
+function getOptimalServer(target, ns) {
+	let result = ns.getServer(target);
+	result.hackDifficulty = result.minDifficulty;
+	result.moneyAvailable = result.moneyMax;
+	return result;
+}
 
 function bestserver(ns) {
 	var self = ns.getPlayer();
@@ -26,7 +32,7 @@ function bestserver(ns) {
 //			ns.hackAnalyzeChance(b) * (100 - ns.getServer(b).hackDifficulty) * (ns.getPlayer()['hacking'] - (ns.getServerRequiredHackingLevel(b) - 1)) * ns.getServerMaxMoney(b) / (ns.getHackTime(b) * ns.hackAnalyzeThreads(b, 1))
 //	});
 	serverlist = serverlist.sort(function (a, b) {
-		return ns.hackAnalyzeChance(a) * ns.getServerMaxMoney(a) * ns.getServerGrowth(a) / ns.getHackTime(a) - ns.hackAnalyzeChance(b) * ns.getServerMaxMoney(b) * ns.getServerGrowth(b)  / ns.getHackTime(b)
+		return ns.getServerMaxMoney(a) * ns.getServerGrowth(a) / ns.formulas.hacking.hackTime(getOptimalServer(a, ns), ns.getPlayer()) - ns.getServerMaxMoney(b) * ns.getServerGrowth(b)  / ns.formulas.hacking.hackTime(getOptimalServer(b, ns), ns.getPlayer())
 	});
 
 	serverlist = serverlist.filter(x => x != "n00dles").filter(x => x != "The-Cave").filter(x => x != "run4theh111z").filter(x => x != "avmnite-02h").filter(x => x != ".").filter(x => x != "I.I.I.I").filter(y => !(ns.getPurchasedServers().includes(y)));
@@ -40,10 +46,6 @@ function bestserver(ns) {
 }
 
 export async function main(ns) {
-	if (ns.fileExists('Formulas.exe')) {
-		ns.run('/jeek/start3.js');
-		ns.exit();
-	}
 	ns.disableLog("disableLog");
 	ns.disableLog("sleep");
 	ns.disableLog("scan");
@@ -88,10 +90,11 @@ export async function main(ns) {
 	
 		if (ns.getPlayer()['hacking'] < 10) {
 			ns.spawn('/jeek/bootstraphack.js', 1, target);
-		} else if (!ns.fileExists('Formulas.exe') || (ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 26  * 1024 * 1024)) {
+		} else if (!ns.fileExists('Formulas.exe') || (ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 26 * 1024 * 1024)) {
 //		} else if (ns.getPurchasedServers().length < 25 || !ns.fileExists('Formulas.exe') || (ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0) < 32 * 1024)) {
 			ns.run('/jeek/checktarget.js', 1, target);
 		} else {
+			ns.run('/jeek/drain.js');
 			ns.run('/jeek/rooted.js');
 		}
 		await ns.sleep(1000);

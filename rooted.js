@@ -61,8 +61,21 @@ export async function main(ns) {
 	serverlist = bestserver(ns);
 	let z = 0;
 	let totalram = ns.getServer('home').maxRam + ns.getPurchasedServers().map(x => ns.getServer(x).maxRam).reduce((a, b) => a + b, 0);
-	while (serverlist.length > 3) {
+	while (serverlist.length > 2) {
 		serverlist.shift();
+	}
+	let pids = []
+	for (let i = 0 ; i < serverlist.length ; i++) {
+        pids.push(ns.run('/jeek/prep.js', 1, serverlist[i]));
+	}
+	while (pids.length > 0) {
+		if (pids[0] > 0) {
+			while (ns.isRunning(pids[0])) {
+				await ns.sleep(1);
+			}
+		}
+		pids.shift();
+		await ns.sleep(1);
 	}
 	let procs = ns.ps('home');
 	for (let i = 0; i < procs.length; i++) {

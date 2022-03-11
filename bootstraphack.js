@@ -1,5 +1,7 @@
 /** @param {NS} ns **/
 export async function main(ns) {
+	ns.disableLog("disableLog");
+	ns.disableLog("sleep");
 	var ratio=.1;
 	var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
 //	ns.tprint("Starting BSHack " + ns.args[0]);
@@ -16,8 +18,8 @@ export async function main(ns) {
 	}
 	var n00dles = ns.getServer(target);
 //	ns.tprint(n00dles.minDifficulty, " ", n00dles.hackDifficulty, " ", n00dles.moneyAvailable, " ", n00dles.moneyMax)
-	while ((ns.getPlayer()['hacking'] == startlevel) & ((n00dles.minDifficulty  < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax * .95))) {
-		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.minDifficulty < n00dles.hackDifficulty)) {
+	while (((ns.getServerMinSecurityLevel(target)  < n00dles.hackDifficulty) | (n00dles.moneyAvailable < n00dles.moneyMax))) {
+		while ( (n00dles.minDifficulty < n00dles.hackDifficulty)) {
 			ns.toast("Weaken " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -36,7 +38,7 @@ export async function main(ns) {
 			}
 			n00dles = ns.getServer(target);
 		}
-		if (n00dles.moneyAvailable < n00dles.moneyMax * .95) {
+		if (n00dles.moneyAvailable < n00dles.moneyMax) {
 			ns.toast("Grow on " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {
@@ -58,8 +60,8 @@ export async function main(ns) {
 		n00dles = ns.getServer(target);
 		await ns.sleep(16 * serverlist.length);
 	}
-	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .94)) {
-		while ((ns.getPlayer()['hacking'] == startlevel) & (n00dles.moneyAvailable * 2 > n00dles.moneyMax)) {
+	if ((n00dles.minDifficulty + 5 >= n00dles.hackDifficulty) & (n00dles.moneyAvailable >= n00dles.moneyMax * .90)) {
+		while ((n00dles.moneyAvailable * 10/9 > n00dles.moneyMax)) {
 			ns.tprint("Hacking " + target);
 			for (var i = 0; i < serverlist.length; i++) {
 				if (ns.hasRootAccess(serverlist[i])) {

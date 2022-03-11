@@ -39,7 +39,7 @@ export async function main(ns) {
 	ns.disableLog("run");
 	await ns.writePort(19, "PREP " + ns.args[0]);
 	var resolution = 125;
-	var ratio = 0.75;
+	var ratio = Math.log(ns.getServerMaxRam('home')) / Math.log(2) / 30;
 	var pids = [];
 	var debug = false;
 	var didone = false;
@@ -72,6 +72,9 @@ export async function main(ns) {
 			ns.tprint(threadsNeeded.toString() + " needed for first weaken");
 		}
 		threadsNeeded = threadsNeeded + 5;
+		if (ns.getServerMoneyAvailable(ns.args[0]) < ns.getServerMaxMoney(ns.args[0])) {
+			threadsNeeded += (5 + Math.ceil(ns.growthAnalyze(ns.args[0], ns.getServerMaxMoney(ns.args[0]) / ns.getServerMoneyAvailable(ns.args[0])))) / 7;
+		}
 		while (threadsNeeded > 0) {
 			pickServers.sort(function compare1(a, b) {
 				return (fGetServer(ns, a).maxRam - fGetServer(ns, a).ramUsed) - (fGetServer(ns, b).maxRam - fGetServer(ns, b).ramUsed);
@@ -137,6 +140,7 @@ export async function main(ns) {
 		if (debug) {
 			ns.tprint("Weakened / Grew " + ns.args[0]);
 		}
+		await ns.sleep(500);
 	}
 	var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
 	var weaken1ThreadsNeeded = Math.ceil(hackThreadsNeeded / 25.0);
@@ -179,8 +183,14 @@ export async function main(ns) {
 	//ns.tprint(ns.getWeakenTime(ns.args[0]), " ", ns.getHackTime(ns.args[0]), " ", ns.getGrowTime(ns.args[0]))
 	//ns.tprint(weaken1Dur, " ", hackDur, " ", growDur)
 	while (true) { //ns.getServerMoneyAvailable(ns.args[0]) > Math.max(5, ns.getServerMaxMoney(ns.args[0]) * (1 - 2 * ratio))) {
+		if (ns.getServerMoneyAvailable == 0) {
+			ns.run('/jeek/prep.js', 1, ns.args[0]);
+		}
 		if (ns.getServerMaxRam('home') > 256 * 1024) {
 			//ratio = .05;
+		}
+		if (ns.getServerMinSecurityLevel(ns.args[0]) * 3 < ns.getServerSecurityLevel(ns.args[0])) {
+			ns.exit();
 		}
 		while (ns.getPlayer()['hacking'] > startlevel) {
 			startlevel = ns.getPlayer()['hacking'];
@@ -315,6 +325,11 @@ export async function main(ns) {
 			}
 			await ns.sleep(1);
 			if (trustForm) {
+				var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
+				var weaken1ThreadsNeeded = Math.ceil(hackThreadsNeeded / 25.0);
+				var growThreadsNeeded = Math.ceil((1 + ratio) * ns.growthAnalyze(ns.args[0], 1 / (1 - ratio)));
+				var weaken2ThreadsNeeded = Math.ceil(hackThreadsNeeded / 12.5);
+				var ramNeeded = hackThreadsNeeded * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script');
 				var adjust = Math.max(ns.getWeakenTime(ns.args[0]), ns.getHackTime(ns.args[0]), ns.getGrowTime(ns.args[0]));
 				var final = [
 					['hack', hackThreadsNeeded, adjust - ns.getHackTime(ns.args[0])],
@@ -364,15 +379,15 @@ export async function main(ns) {
 				}
 			}
 		} else {
-				if (!didone) {
-				ratio = ratio * .75 ;
+			if (!didone) {
+				ratio = ratio * .25;
 				startlevel = startlevel - 1;
 				var hackThreadsNeeded = Math.ceil(ratio / (ns.hackAnalyze(ns.args[0])));
 				var weaken1ThreadsNeeded = Math.ceil(hackThreadsNeeded / 25.0);
 				var growThreadsNeeded = Math.ceil((1 + ratio) * ns.growthAnalyze(ns.args[0], 1 / (1 - ratio)));
 				var weaken2ThreadsNeeded = Math.ceil(hackThreadsNeeded / 12.5);
 				var ramNeeded = hackThreadsNeeded * ns.getScriptRam('/jeek/hack.js') + (weaken1ThreadsNeeded + weaken2ThreadsNeeded) * ns.getScriptRam('/jeek/weaken.script') + growThreadsNeeded * ns.getScriptRam('/jeek/grow.script');
-				}
+			}
 			if (debug) {
 				ns.tprint("Not enough free memory: " + freeMem.toString() + " " + ratio.toString());
 			}
@@ -386,7 +401,7 @@ export async function main(ns) {
 		//			doItNow = doItNow.filter(x => x[1] == 'weaken');
 		//		}
 		if (ns.getServerMaxMoney(ns.args[0]) * (1 - ratio) > ns.getServerMoneyAvailable(ns.args[0])) {
-			doItNow = doItNow.filter(x => x[1] != 'hack');
+			doItNow = doItNow.map(x => x[1] != 'hack' ? x : [x[0], 'grow', x[2], x[3]]);
 		}
 		for (var i = 0; i < doItNow.length; i++) {
 			var threadsNeeded = doItNow[i][2];
