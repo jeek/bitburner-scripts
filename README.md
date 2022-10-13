@@ -1,7 +1,7 @@
 # bitburner-scripts
 scripts for bitburner
 
-corp.js - a library for working with corporations
+corp.js - a library for working with corporations ( not ready for use )
 
 packitin.js - fast approximation of optimal warehouse layout
 
