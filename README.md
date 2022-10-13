@@ -3,7 +3,7 @@ scripts for bitburner
 
 corp.js - a library for working with corporations
 
-packitin.js - fast approximation of optimal warehouse Estate
+packitin.js - fast approximation of optimal warehouse layout
 
 roulette.js - big money
 
