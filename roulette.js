@@ -73,8 +73,7 @@ export async function main(ns) {
         ns.print("Guessing... " + nextguess[0].toString());
         try {
         buttons[nextguess[0]][1][Object.keys(buttons[nextguess[0]][1])[1]].onClick({ isTrusted: true });
-        } catch {     ns.singularity.commitCrime("Mug");
-ns.spawn('lazy.js')};
+        } catch {     ns.singularity.commitCrime("Mug"); };
         z = z + 1;
         ns.print(wheels[0]);
         ns.print(seen);
