@@ -8,3 +8,5 @@ packitin.js - fast approximation of optimal warehouse layout
 roulette.js - big money
 
 truxican.js - optimize which workers have which jobs while maintaining position ratios
+
+radio.js - listen to internet radio while you play
